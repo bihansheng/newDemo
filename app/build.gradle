@@ -1,0 +1,251 @@
+apply plugin: 'com.android.application'
+apply from:'config.gradle'
+
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+
+    // 签名文件
+    signingConfigs {
+        releaseConfig {
+            keyAlias "${signing_keyAlias}"
+            keyPassword "${signging_certificatePassword}"
+            storeFile file("./${signing_certificate}")
+            storePassword "${signging_storePassword}"
+        }
+
+        debugConfig {
+            keyAlias "${signing_keyAlias_test}"
+            keyPassword "${signging_certificatePassword_test}"
+            storeFile file("./${signing_certificate_test}")
+            storePassword "${signging_storePassword_test}"
+        }
+
+    }
+
+
+    defaultConfig {
+        applicationId "com.wankun.demo"
+        minSdkVersion 21
+        targetSdkVersion 28
+        //动态设置版本号
+        buildConfigField "int", "version_major", "${version_major}"
+        buildConfigField "int", "version_minor", "${version_minor}"
+        buildConfigField "int", "version_private", "${version_private}"
+
+        manifestPlaceholders = [
+                versionCode:Integer.parseInt("${version_major}")*100+ Integer.parseInt("${version_minor}"),
+                versionName:"${version_major}."+("${version_minor}".length()<2 ? "0${version_minor}":"${version_minor}")
+
+        ]
+
+        multiDexEnabled = true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //必须要保证所有的flavor 都属于同一个维度
+        flavorDimensions "default"
+    }
+
+    //移除lint检测的error
+    lintOptions {
+        abortOnError false
+    }
+
+    dexOptions {
+        preDexLibraries = false
+    }
+
+
+    buildTypes {
+
+        debug {
+            signingConfig signingConfigs.debugConfig
+            minifyEnabled false
+            zipAlignEnabled true
+            //移除无用的resource文件
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            minifyEnabled false
+            zipAlignEnabled true
+            //移除无用的resource文件
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
+        }
+
+        //设置生成的apk路径和名称
+        applicationVariants.all { variant ->
+            def dirName
+            def apkName
+            if (variant.buildType.name == 'release') {
+                dirName = "apk_release"
+                apkName = "release"
+            }else{
+                dirName = "apk_debug"
+                apkName = "debug"
+            }
+            // 自定义输出路径
+            variant.outputs.all { output ->
+                //打包是开启，让生成的apk都在同一个文件夹下
+                variant.getPackageApplicationProvider().get().outputDirectory = new File(project.rootDir.absolutePath + File.separator + "app" + File.separator + dirName)
+                //设置apk名称
+                outputFileName = "${variant.productFlavors[0].name}_v${version_major}.${version_minor}.${version_private}_${releaseTime()}_"+apkName+".apk"
+
+            }
+        }
+    }
+
+
+    // 多渠道/多环境 的不同配置
+    productFlavors {
+        channel_1_ {
+            // 每个环境包名不同
+            applicationId "com.wankun.demo.channel_1"
+            // 动态添加 string.xml 字段；
+            // 注意，这里是添加，在 string.xml 不能有这个字段，会重名！！！
+            resValue "bool", "isrRank", 'false'
+            // 动态修改 常量 字段
+            buildConfigField "String", "ENVIRONMENT", '"dev"'
+            buildConfigField "String", "BUGLYAPPID", '"dev"'
+            // 修改 AndroidManifest.xml 里渠道变量
+            manifestPlaceholders = [
+                    app_icon: "@mipmap/ic_launcher_round",
+                    app_name: "demo_channel_1"]
+
+
+        }
+        channel_2_ {
+            applicationId "com.wankun.demo.channel_2"
+
+            resValue "bool", "isrRank", 'true'
+
+            buildConfigField "String", "ENVIRONMENT", '"stage"'
+            buildConfigField "String", "BUGLYAPPID", '"stage"'
+
+            manifestPlaceholders = [
+                    app_icon: "@mipmap/ic_launcher_round",
+                    app_name: "demo_channel_2"]
+
+
+        }
+        channel_3_ {
+            applicationId "com.wankun.demo.channel_3"
+
+            resValue "bool", "isrRank", 'true'
+
+            buildConfigField "String", "ENVIRONMENT", '"prod"'
+            buildConfigField "String", "BUGLYAPPID", '"prod"'
+
+            manifestPlaceholders = [
+                    app_icon: "@mipmap/ic_launcher",
+                    app_name: "demo_channel_1"]
+
+
+        }
+
+
+    }
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+    //打包忽略掉第三方jar相同的文件
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/maven/com.github.mpusher/mpush-client-java/pom.xml'
+        exclude 'META-INF/maven/com.github.mpusher/mpush-client-java/pom.properties'
+        exclude 'META-INF/androidx.*.version'
+        exclude 'META-INF/rxjava.properties'
+    }
+
+}
+
+
+static def releaseTime() {
+    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
+}
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:palette-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.android.support:multidex:1.0.3'
+    //butterknife 通过注释获取控件
+    implementation 'com.jakewharton:butterknife:8.8.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.0'
+    //设置4.4版本中电池栏背景颜色
+    implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+    //eventbus  消息
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    //Gson 库
+    implementation 'com.google.code.gson:gson:2.8.2'
+    //网络请求RxJava2+Retrofit2+OkHttp3
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    //处理使用RxJava时可能出现的内存泄漏问题
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.1.0'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-navi:2.1.0'
+    //一个很漂亮的打印日志工具
+    implementation 'com.orhanobut:logger:2.2.0'
+    //图片展示
+    implementation 'com.github.bumptech.glide:glide:4.5.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
+    implementation 'jp.wasabeef:glide-transformations:4.0.1'
+    //图片选择
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
+    //内存溢出检查，在测试阶段使用
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    //界面布局卡顿检查
+    implementation 'com.github.markzhai:blockcanary-android:1.5.0'
+    //底板导航栏
+    implementation 'com.roughike:bottom-bar:2.3.1'
+    implementation 'org.jetbrains:annotations:15.0'
+    //非常不错的 loading 加载库
+    implementation 'com.wang.avi:library:1.0.5'
+    //一个不错的BaseAapter封装类
+    implementation 'org.byteam.superadapter:superadapter:3.4'
+    //RxTool    常用工具封装
+    //基础工具库
+    implementation "com.github.tamsiree.RxTool:RxKit:2.3.9"
+    //UI库
+    implementation "com.github.tamsiree.RxTool:RxUI:2.3.9"
+    //相机库
+    //implementation "com.github.tamsiree.RxTool:RxCamera:2.3.9"
+    //功能库（Zxing扫描与生成二维码条形码 支付宝 微信）
+    implementation "com.github.tamsiree.RxTool:RxFeature:2.3.9"
+}

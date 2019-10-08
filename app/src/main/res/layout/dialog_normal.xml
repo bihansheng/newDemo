@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="263dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/dialog_bg_shape"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/title"
+            android:textColor="@color/ash"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="visible"
+            android:textStyle="bold"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginTop="30dp"/>
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/message"
+                android:textColor="@color/ash"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingLeft="20.0dip"
+                android:paddingRight="20.0dip"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ash_line"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/dialog_bg_shape"
+            android:gravity="center"
+            android:orientation="horizontal" >
+            <TextView
+                android:id="@+id/negativeButton"
+                android:textColor="#B4B4B4"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/alert_cancel" />
+            <View
+                android:id="@+id/btmSplitLine"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/ash_line"
+                android:layout_gravity="center_horizontal"/>
+            <TextView
+                android:id="@+id/positiveButton"
+                android:textColor="@color/royalblue"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/alert_confirm" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" addBOMForNewFiles="with NO BOM">
+    <file url="file://$PROJECT_DIR$/app/config.gradle" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/wankun/demo/adapter/TabPagerAdapter.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/wankun/demo/fragment/WebFragment.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/wankun/demo/manage/UpdateManager.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/wankun/demo/model/httpResponse/UpdateVersion.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-v21/color_gray_to_blue.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-v21/point_red_shape.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_web.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/bottom_bar_menu.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_web.xml" charset="GBK" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

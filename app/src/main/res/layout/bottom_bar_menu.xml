@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu_box"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical"
+    android:paddingTop="2dp">
+    <!-- 首页底部按钮 图片-->
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/bottom_bar_home_selector" />
+    <!-- 首页底部按钮 文字-->
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/iv_image"
+        android:layout_centerHorizontal="true"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:focusable="true"
+        android:textColor="@drawable/color_gray_to_blue"
+        android:textSize="@dimen/t10" />
+
+    <ImageView
+        android:id="@+id/red_point"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/iv_image"
+        android:background="@drawable/point_red_shape"
+        android:visibility="gone" />
+</RelativeLayout>
+

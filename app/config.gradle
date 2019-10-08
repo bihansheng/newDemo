@@ -1,0 +1,111 @@
+//def tdxCfgDir = "$rootDir/../tdxCfg/"
+
+//判断系统类型
+def isWindows() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
+
+import java.util.regex.Pattern
+//设置小版本号
+def setVersionPrivate(){
+    def propertiesFile = file("$rootDir/gradle.properties")
+    def pattern = Pattern.compile("version_private=(\\d+)")
+    def propertiesText = propertiesFile.getText()
+    def matcher = pattern.matcher(propertiesText)
+    matcher.find()
+    def versionPrivate = Integer.parseInt(matcher.group(1))+1
+    if (versionPrivate>99){
+        versionPrivate=1
+    }
+    println("versionPrivate="+versionPrivate)
+    println("matcher="+matcher+",versionPrivate="+versionPrivate)
+    def propertiesContent = matcher.replaceAll("version_private=" + versionPrivate)
+    propertiesFile.write(propertiesContent)
+}
+
+
+
+gradle.projectsLoaded {
+    println "settings：执行projectsLoaded..."
+    setVersionPrivate()
+}
+
+
+gradle.buildStarted {
+    project ->
+        println "buildStarted"
+
+}
+
+
+//1.setting.gradle 执行结束的监听
+gradle.settingsEvaluated {project ->
+    println "settings.gradle 初始化执行结束"
+
+}
+
+//2.参与构建的Project对象创建完毕的监听
+gradle.projectsLoaded {
+    Gradle gradle ->
+        println "settings.gradle 所有在 settings 中 include 的 Project 都创建完成了"
+}
+
+
+
+//监听执行完成状态，执行完成打印
+gradle.beforeProject { project ->
+//    setVersionPrivate()
+    println('》》》》beforeProject '  )
+
+}
+
+
+//监听执行完成状态，执行完成打印
+gradle.afterProject { project ->
+    println('》》》》afterProject ' + project + '  has evaluated')
+    //打包结束后，自动把小版本号加1
+//    setVersionPrivate()
+
+
+}
+
+
+gradle.projectsEvaluated {
+    gradle ->
+        println "所有的project都配置完毕了，准备生成Task依赖关系"
+}
+
+
+
+
+////每一个 Task 任务执行之前回调
+//gradle.taskGraph.beforeTask {
+//    Task task ->
+//        println "Project[${task.project.name}]--->Task[${task.name}] 在执行之前被回调"
+//}
+//
+////每一个 task 执行之后被回调
+//gradle.taskGraph.afterTask {
+//    task, TaskState taskState ->
+//        //第二个参数表示 task 的状态，是可选的参数
+//        println "Project[${task.project.name}]--->Task[${task.name}] 在执行完毕,taskState[upToDate:${taskState.upToDate},skipped:${taskState.skipped},executed:${taskState.executed},didWork:${taskState.didWork}]"
+//}
+
+
+//监听整个build完毕
+gradle.buildFinished {
+    BuildResult buildResult ->
+        println "构建完毕"
+}
+
+
+
+
+
+
+
+gradle.taskGraph.whenReady {
+    TaskExecutionGraph graph ->
+        println "task 依赖关系已经生成"
+}
+

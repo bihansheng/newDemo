@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_home"
+        icon="@drawable/bottom_bar_home_selector"
+        title="@string/bottom_bar_home"
+        barColorWhenSelected="@color/lightsalmon"
+        />
+    <tab
+        id="@+id/tab_list"
+        icon="@drawable/bottom_bar_list_selector"
+        title="@string/bottom_bar_list"
+        barColorWhenSelected="@color/darkcyan"
+        />
+    <tab
+        id="@+id/tab_news"
+        icon="@drawable/bottom_bar_news_selector"
+        title="@string/bottom_bar_news"
+        barColorWhenSelected="@color/darkkhaki"
+        />
+    <tab
+        id="@+id/tab_mine"
+        icon="@drawable/bottom_bar_mine_selector"
+        title="@string/bottom_bar_mine"
+        barColorWhenSelected="@color/lightskyblue"
+        />
+
+</tabs>

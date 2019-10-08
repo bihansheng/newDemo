@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 首页切换按钮-->
+    <declare-styleable name="ButtonBarTab">
+        <attr name="menuText" format="reference" />
+        <attr name="menuImage" format="reference" />
+    </declare-styleable>
+</resources>
